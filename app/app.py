@@ -1,9 +1,9 @@
 import os
 import traceback
-
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
+from .commande import setup_commands
 
 load_dotenv()
 
@@ -33,13 +33,10 @@ async def on_command_error(ctx, error):
     for chunk in chunk_text(err_text):
         await channel.send(f"🚨 **Erreur détectée :**\n```py\n{chunk}\n```")
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send("Pong !")
-
 @bot.check
 async def global_check(ctx):
-    return ctx.author.id == os.getenv("MY_ID")
+    return ctx.author.id == int(os.getenv("MY_ID"))
 
 def start_bot():
+    setup_commands(bot)
     bot.run(TOKEN)
